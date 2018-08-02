@@ -1,4 +1,10 @@
+var start;
+function prn(txt) {
+  console.log(((Date.now() - start)/ 1000.0) + ": " + txt);
+}
+
 function work() {
+  start = Date.now();
   var img = document.getElementById('img');
   var canvas2 = document.createElement('canvas');
   canvas2.width = img.width;
@@ -6,8 +12,11 @@ function work() {
   canvas2.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
   var imageData = canvas2.getContext('2d').getImageData(0, 0, img.width, img.height);
   var pixelData = imageData.data;
+  prn('got image ' + img.width + 'x' + img.height);
   // Sobel constructor returns an Uint8ClampedArray with sobel data
   var sobelData = Sobel(imageData);
+  prn('done Sobel');
+
 
   // [sobelData].toImageData() returns a new ImageData object
   var sobelImageData = sobelData.toImageData();
@@ -56,6 +65,8 @@ function work() {
   Graph.markExternal(edges);
   var face = [[0, 1, 2, 3]];
 
+  prn('prepare graph');
+
   // var vertices = [[100, 200],[100, 300],[300, 400],[300, 300],[400, 200],[300, 200],[300, 100],[200, 200],[200, 100],[150, 200],[250, 300],[150, 300]];
   // Graph.fitVerticesInto(vertices, canvas.width(), canvas.height());
   // var edges = [[ 0,  1],[ 1,  2],[ 2,  3],[ 3,  4],[ 4,  5],[ 5,  6],[ 6,  7],[ 7,  8],[ 8,  0],[ 9, 10],[10, 11],[11,  9]];
@@ -67,9 +78,12 @@ function work() {
   // var edges = key.edges.slice();
   // var face = key.faces[0];
   var diags = triangulate.face(vertices, face);
+  prn('triangulate.face');
   edges = edges.concat(diags);
   var qe = triangulate.makeQuadEdge(vertices, edges);
+  prn('makeQuadEdge');
   triangulate.refineToDelaunay(vertices, edges, qe.coEdges, qe.sideEdges);
+  prn('refineToDelaunay');
   var trace = [];
   var verticesBackup = vertices.slice();
   var edgesBackup = edges.slice();
@@ -79,6 +93,7 @@ function work() {
     coEdges0[j] = qe.coEdges[j].slice();
     sideEdges0[j] = qe.sideEdges[j].slice();
   }
+  prn('slice edges');
 
   var steinerPts = [];
   for (var y = 0; y < img.height; ++y) {
@@ -88,6 +103,8 @@ function work() {
       }
     }
   }
+  prn('add sobel extreme to steiner points');
+
   triangulate.refineToRuppert(vertices, edges, qe.coEdges, qe.sideEdges, {
     minAngle: 30,
     maxSteinerPoints: 30000,
@@ -95,57 +112,9 @@ function work() {
     isBad: isBadOnImage,
     forceSteinerPoints: steinerPts
   });
+  prn('refineToRuppert');
 
   g = new Graph(vertices, edges, [face]);
   g.draw(canvas);//, { edgeNumbers: true });
-
-  // $('#show-steps-button').click(function () {
-  //   var vertices = verticesBackup.slice();
-  //   var edges = edgesBackup.slice();
-  //   var coEdges = [];
-  //   var sideEdges = [];
-  //   for (var j = 0; j < edges.length; ++j) {
-  //     coEdges[j] = coEdges0[j].slice();
-  //     sideEdges[j] = sideEdges0[j].slice();
-  //   }
-  //   var g = new Graph(vertices, edges, [face]);
-  //   canvas.clearCanvas();
-  //   g.draw(canvas, { edgeNumbers: true });
-  //   var l = 0;
-  //   var interval = setInterval(function () {
-  //     console.log("tick: %d", l);
-  //     if (l < trace.length) {
-  //       var t = trace[l];
-  //       ++l;
-  //       if (t.split !== undefined) {
-  //         for (var s = 0; s < t.split.length; ++s) {
-  //           var j = t.split[s];
-  //           triangulate.splitEdge(vertices, edges, coEdges, sideEdges, j);
-  //         }
-  //       }
-  //       if (t.insert !== undefined) {
-  //         var k = t.insert % 2, j = (t.insert - k) / 2;
-  //         var a = vertices[edges[j][0]];
-  //         var b = vertices[coEdges[j][k]];
-  //         var c = vertices[edges[j][1]];
-  //         var p = geom.circumcenter(a, b, c);
-  //         var insert = triangulate.tryInsertPoint(
-  //           vertices, edges, coEdges, sideEdges, p, j);
-  //         console.log("insert j: %d, i: %d", j, coEdges[j][k]);
-  //       }
-  //       if (edges.length != t.edgeCnt)
-  //         console.log("Oh no!");
-  //       canvas.clearCanvas();
-  //       g.draw(canvas);//, { edgeNumbers: true });
-  //     } else {
-  //       clearInterval(interval);
-  //     }
-  //   }, 1);
-  // });
-
-  // $('#canvas').click(function (event) {
-  //   var m = [event.pageX - canvas.offset().left, event.pageY - canvas.offset().top];
-  //   console.log(g.getVertexAt(m));
-  // })
-
+  prn('draw');
 }
