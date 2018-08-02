@@ -7,57 +7,36 @@ $(document).ready(function () {
   var pixelData = canvas2.getContext('2d').getImageData(0, 0, img.width, img.height).data;
   // debugger
 
-  function channel(pos, c) {
-    return pixelData[(pos[0] * img.width + pos[1]) * 4 + c];
+  function pixheight(x, y) {
+    var ximage = Math.floor(x / 2);
+    var yimage = Math.floor(y / 2);
+    var off = (ximage * img.width + yimage) * 4;
+    return pixelData[off + 0] + pixelData[off + 1] + pixelData[off + 2];
   }
 
-  function pixheight(pos) {
-    return channel(pos, 0) + channel(pos, 1) + channel(pos, 2);
-  }
-
-  function cross3(a, b) {
-    var ax = a[0], ay = a[1], az = a[2];
-    var bx = b[0], by = b[1], bz = b[2];
-    var x = ay * bz - az * by;
-    var y = az * bx - ax * bz;
-    var z = ax * by - ay * bx;
-    return [x, y, z];
-  }
-
-  function sub3(a, b) {
-    return [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
-  }
-
-  function norm3(v) {
-    var d = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
-    d = d || 1;
-    return [v[0] / d, v[1] / d, v[2] / d];
-  }
-
-  function dot3(u, v) {
-    return u[0] * v[0] + u[1] * v[1] + u[2] * v[2];
-  }
-
+  var plane = new THREE.Plane();
+  var va = new THREE.Vector3(), vb = new THREE.Vector3(), vc = new THREE.Vector3();
+  var vm = new THREE.Vector3(), vo = new THREE.Vector3();
+  var line = new THREE.Line3();
+  line.end = vm;
   function isBadOnImage(a, b, c) {
-    var center = [(a[0] + b[0] + c[0]) / 3.0, (a[1] + b[1] + c[1]) / 3.0];
-    var ah = pixheight(a), bh = pixheight(b), ch = pixheight(c);
-    var cenh = pixheight(center);
-
-    var pn = norm3(cross3(sub3(c, b), sub3(a, b)));
-    var pd = -dot3(a, pn);
-
-    var linestart = [center[0], center[1], 0];
-    var direction = [0,0,1];//line.delta( v1 );
-    var denominator = pn[2];//this.normal.dot( direction );
-    var imh = - ( dot3(linestart, pn) + pd ) / denominator;
-    return Math.abs(imh - cenh) > 1;
+    va.set(a[0], a[1], pixheight(a[0], a[1]));
+    vb.set(b[0], b[1], pixheight(b[0], b[1]));
+    vc.set(c[0], c[1], pixheight(c[0], c[1]));
+    var xm = (a[0] + b[0] + c[0]) / 3.0;
+    var ym = (a[1] + b[1] + c[1]) / 3.0;
+    vm.set(xm, ym, pixheight(xm, ym));
+    plane.setFromCoplanarPoints(va, vb, vc);
+    line.start.set(xm, ym, 0);
+    plane.intersectLine(line, vo);
+    return Math.abs(vo.z - vm.z) > 10;
   }
 
   var canvas = $('#canvas');
 
-  var vertices = [[0, 0],[0, img.height],[img.width, img.height],[img.width, 0]];
+  var vertices = [[0, 0], [0, img.height * 2 - 2], [img.width * 2 - 2, img.height * 2 - 2], [img.width * 2 - 2, 0]];
   Graph.fitVerticesInto(vertices, canvas.width(), canvas.height());
-  var edges = [[0, 2]];
+  var edges = [[0, 1], [1, 2], [2, 3], [3, 0]];
   Graph.markFixed(edges);
   Graph.markExternal(edges);
   var face = [[0, 1, 2, 3]];
@@ -87,7 +66,7 @@ $(document).ready(function () {
   }
   triangulate.refineToRuppert(vertices, edges, qe.coEdges, qe.sideEdges, {
     minAngle: 30,
-    maxSteinerPoints: 300,
+    maxSteinerPoints: 3000,
     trace: trace,
     isBad: isBadOnImage
   });
@@ -136,7 +115,7 @@ $(document).ready(function () {
       } else {
         clearInterval(interval);
       }
-    }, 50);
+    }, 30);
   });
 
   $('#canvas').click(function (event) {
