@@ -1,10 +1,25 @@
-$(document).ready(function () {
+function work () {
   var img = document.getElementById('img');
   var canvas2 = document.createElement('canvas');
   canvas2.width = img.width;
   canvas2.height = img.height;
   canvas2.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
-  var pixelData = canvas2.getContext('2d').getImageData(0, 0, img.width, img.height).data;
+  var imageData = canvas2.getContext('2d').getImageData(0, 0, img.width, img.height);
+  var pixelData = imageData.data;
+    // Sobel constructor returns an Uint8ClampedArray with sobel data
+    var sobelData = Sobel(imageData);
+
+    // [sobelData].toImageData() returns a new ImageData object
+    var sobelImageData = sobelData.toImageData();
+    var sobelPixels =  sobelImageData.data;
+
+    function pixsobel(x, y) {
+      var ximage = Math.floor(x), yimage = Math.floor(y);
+      var off = (ximage + img.width * yimage) * 4;
+      return sobelPixels[off];
+    }
+
+
   // debugger
 
   // var xtop = 2*(img.width - 1), ytop = 2*(img.height - 1);
@@ -67,11 +82,21 @@ $(document).ready(function () {
     coEdges0[j] = qe.coEdges[j].slice();
     sideEdges0[j] = qe.sideEdges[j].slice();
   }
+
+  var steinerPts = [];
+  for (var y = 0; y < img.height; ++y) {
+    for (var x = 0; x < img.width; ++x) {
+      if (pixsobel(x, y) > 240) {
+        steinerPts.push([x,y]);
+      }
+    }
+  }
   triangulate.refineToRuppert(vertices, edges, qe.coEdges, qe.sideEdges, {
     minAngle: 30,
     maxSteinerPoints: 30000,
     trace: trace,
-    isBad: isBadOnImage
+    isBad: isBadOnImage,
+    forceSteinerPoints: steinerPts
   });
 
   g = new Graph(vertices, edges, [face]);
@@ -126,4 +151,4 @@ $(document).ready(function () {
     console.log(g.getVertexAt(m));
   })
 
-})
+}

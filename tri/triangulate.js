@@ -686,6 +686,7 @@ var triangulate = (function () {
         function(a, b, c) {
           return isBadOrig(a, b, c) || settings.isBad(a, b, c);
         };
+      var steinerPts = settings.forceSteinerPoints || [];
       var encroachedEdges = [];
       var badTriangles = [];
 
@@ -700,12 +701,47 @@ var triangulate = (function () {
 
       while (
         steinerLeft > 0 &&
-        (encroachedEdges.length > 0 || badTriangles.length > 0)
+        (encroachedEdges.length > 0 || badTriangles.length > 0 || steinerPts.length > 0)
       ) {
         var affectedEdges = 0;
         var forceSplit = [];
         var traceEntry = {};
-        if (encroachedEdges.length > 0) {
+        if (steinerPts.length > 0) {
+          var stp = steinerPts.pop();
+          var j = findEnclosingTriangle(vertices, edges, coEdges, sideEdges, stp, 0);
+          j = Math.floor(j / 2); // triangle real index, see evil hack on findEnclosingTriangle() comment
+          // arrToBack(badTriangles, s);
+          // var j = badTriangles[badTriangles.length - 1];
+          var edge = edges[j], coEdge = coEdges[j];
+          var a = vertices[edge[0]], c = vertices[edge[1]];
+          var okCnt = 0;
+          for (var k = 0; k < 2; ++k) {
+            // if (coEdge[k] === undefined) {
+            //   ++okCnt;
+            //   continue;
+            // }
+            var b = vertices[coEdge[k]];
+            // if (!isBad(a, b, c)) {
+            //   ++okCnt;
+            //   continue;
+            // }
+            // var p = geom.circumcenter(a, b, c);
+            var p = stp;
+            var insert = tryInsertPoint(vertices, edges, coEdges, sideEdges, p, j);
+            if (insert.success) {
+              affectedEdges = insert.affectedEdges;
+              --steinerLeft;
+              traceEntry.insert = 2 * j + k;
+            } else {
+              forceSplit = insert.encroachedEdges;
+            }
+            break;
+          }
+          // if (okCnt == 2) {
+          //   badTriangles.pop();
+          //   bad[j] = false;
+          // }
+        } else if (encroachedEdges.length > 0) {
           var s = Math.floor(Math.random() * encroachedEdges.length);
           arrToBack(encroachedEdges, s);
           var j = encroachedEdges.pop();
