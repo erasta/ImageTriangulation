@@ -63,16 +63,6 @@ function work() {
 
   prn('prepare graph');
 
-  // var vertices = [[100, 200],[100, 300],[300, 400],[300, 300],[400, 200],[300, 200],[300, 100],[200, 200],[200, 100],[150, 200],[250, 300],[150, 300]];
-  // Graph.fitVerticesInto(vertices, canvas.width(), canvas.height());
-  // var edges = [[ 0,  1],[ 1,  2],[ 2,  3],[ 3,  4],[ 4,  5],[ 5,  6],[ 6,  7],[ 7,  8],[ 8,  0],[ 9, 10],[10, 11],[11,  9]];
-  // Graph.markFixed(edges);
-  // Graph.markExternal(edges);
-  // var face = [[0, 1, 2, 3, 4, 5, 6, 7, 8],[9,10,11]];
-
-  // var vertices = Graph.fitVerticesInto(key.vertices, canvas.width(), canvas.height());
-  // var edges = key.edges.slice();
-  // var face = key.faces[0];
   var diags = triangulate.face(vertices, face);
   prn('triangulate.face');
   edges = edges.concat(diags);
