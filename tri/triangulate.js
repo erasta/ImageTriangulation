@@ -689,12 +689,6 @@ var triangulate = (function () {
       var encroachedEdges = [];
       var badTriangles = [];
 
-      // if (settings.isBad) {
-      //   var isBad = function(a, b, c) {
-      //     return isBad(a, b, c) || settings.isBad(a, b, c);
-      //   }
-      // }
-
       for (var j = 0; j < edges.length; ++j) {
         if (edges[j].fixed) {
           encroachedEdges.push(j);
