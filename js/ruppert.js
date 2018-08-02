@@ -1,4 +1,4 @@
-function work () {
+function work() {
   var img = document.getElementById('img');
   var canvas2 = document.createElement('canvas');
   canvas2.width = img.width;
@@ -6,21 +6,18 @@ function work () {
   canvas2.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
   var imageData = canvas2.getContext('2d').getImageData(0, 0, img.width, img.height);
   var pixelData = imageData.data;
-    // Sobel constructor returns an Uint8ClampedArray with sobel data
-    var sobelData = Sobel(imageData);
+  // Sobel constructor returns an Uint8ClampedArray with sobel data
+  var sobelData = Sobel(imageData);
 
-    // [sobelData].toImageData() returns a new ImageData object
-    var sobelImageData = sobelData.toImageData();
-    var sobelPixels =  sobelImageData.data;
+  // [sobelData].toImageData() returns a new ImageData object
+  var sobelImageData = sobelData.toImageData();
+  var sobelPixels = sobelImageData.data;
 
-    function pixsobel(x, y) {
-      var ximage = Math.floor(x), yimage = Math.floor(y);
-      var off = (ximage + img.width * yimage) * 4;
-      return sobelPixels[off];
-    }
-
-
-  // debugger
+  function pixsobel(x, y) {
+    var ximage = Math.floor(x), yimage = Math.floor(y);
+    var off = (ximage + img.width * yimage) * 4;
+    return sobelPixels[off];
+  }
 
   // var xtop = 2*(img.width - 1), ytop = 2*(img.height - 1);
   var xtop = img.width - 1, ytop = img.height - 1;
@@ -87,7 +84,7 @@ function work () {
   for (var y = 0; y < img.height; ++y) {
     for (var x = 0; x < img.width; ++x) {
       if (pixsobel(x, y) > 240) {
-        steinerPts.push([x,y]);
+        steinerPts.push([x, y]);
       }
     }
   }
@@ -102,53 +99,53 @@ function work () {
   g = new Graph(vertices, edges, [face]);
   g.draw(canvas);//, { edgeNumbers: true });
 
-  $('#show-steps-button').click(function () {
-    var vertices = verticesBackup.slice();
-    var edges = edgesBackup.slice();
-    var coEdges = [];
-    var sideEdges = [];
-    for (var j = 0; j < edges.length; ++j) {
-      coEdges[j] = coEdges0[j].slice();
-      sideEdges[j] = sideEdges0[j].slice();
-    }
-    var g = new Graph(vertices, edges, [face]);
-    canvas.clearCanvas();
-    g.draw(canvas, { edgeNumbers: true });
-    var l = 0;
-    var interval = setInterval(function () {
-      console.log("tick: %d", l);
-      if (l < trace.length) {
-        var t = trace[l];
-        ++l;
-        if (t.split !== undefined) {
-          for (var s = 0; s < t.split.length; ++s) {
-            var j = t.split[s];
-            triangulate.splitEdge(vertices, edges, coEdges, sideEdges, j);
-          }
-        }
-        if (t.insert !== undefined) {
-          var k = t.insert % 2, j = (t.insert - k) / 2;
-          var a = vertices[edges[j][0]];
-          var b = vertices[coEdges[j][k]];
-          var c = vertices[edges[j][1]];
-          var p = geom.circumcenter(a, b, c);
-          var insert = triangulate.tryInsertPoint(
-            vertices, edges, coEdges, sideEdges, p, j);
-          console.log("insert j: %d, i: %d", j, coEdges[j][k]);
-        }
-        if (edges.length != t.edgeCnt)
-          console.log("Oh no!");
-        canvas.clearCanvas();
-        g.draw(canvas);//, { edgeNumbers: true });
-      } else {
-        clearInterval(interval);
-      }
-    }, 1);
-  });
+  // $('#show-steps-button').click(function () {
+  //   var vertices = verticesBackup.slice();
+  //   var edges = edgesBackup.slice();
+  //   var coEdges = [];
+  //   var sideEdges = [];
+  //   for (var j = 0; j < edges.length; ++j) {
+  //     coEdges[j] = coEdges0[j].slice();
+  //     sideEdges[j] = sideEdges0[j].slice();
+  //   }
+  //   var g = new Graph(vertices, edges, [face]);
+  //   canvas.clearCanvas();
+  //   g.draw(canvas, { edgeNumbers: true });
+  //   var l = 0;
+  //   var interval = setInterval(function () {
+  //     console.log("tick: %d", l);
+  //     if (l < trace.length) {
+  //       var t = trace[l];
+  //       ++l;
+  //       if (t.split !== undefined) {
+  //         for (var s = 0; s < t.split.length; ++s) {
+  //           var j = t.split[s];
+  //           triangulate.splitEdge(vertices, edges, coEdges, sideEdges, j);
+  //         }
+  //       }
+  //       if (t.insert !== undefined) {
+  //         var k = t.insert % 2, j = (t.insert - k) / 2;
+  //         var a = vertices[edges[j][0]];
+  //         var b = vertices[coEdges[j][k]];
+  //         var c = vertices[edges[j][1]];
+  //         var p = geom.circumcenter(a, b, c);
+  //         var insert = triangulate.tryInsertPoint(
+  //           vertices, edges, coEdges, sideEdges, p, j);
+  //         console.log("insert j: %d, i: %d", j, coEdges[j][k]);
+  //       }
+  //       if (edges.length != t.edgeCnt)
+  //         console.log("Oh no!");
+  //       canvas.clearCanvas();
+  //       g.draw(canvas);//, { edgeNumbers: true });
+  //     } else {
+  //       clearInterval(interval);
+  //     }
+  //   }, 1);
+  // });
 
-  $('#canvas').click(function (event) {
-    var m = [event.pageX - canvas.offset().left, event.pageY - canvas.offset().top];
-    console.log(g.getVertexAt(m));
-  })
+  // $('#canvas').click(function (event) {
+  //   var m = [event.pageX - canvas.offset().left, event.pageY - canvas.offset().top];
+  //   console.log(g.getVertexAt(m));
+  // })
 
 }
