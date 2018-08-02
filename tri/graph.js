@@ -5,12 +5,12 @@ function Graph (vertices, edges, faces) {
 
   this.vertexStyle = {
     color: 'black',
-    radius: 4,
+    radius: 1,
     showLabel: false
   };
   this.edgeStyle = {
     color: 'black',
-    width: 3,
+    width: 1,
     showLabel: false
   };
   this.faceStyle = {

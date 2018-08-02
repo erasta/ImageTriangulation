@@ -8,8 +8,8 @@ $(document).ready(function () {
   // debugger
 
   function pixheight(x, y) {
-    var ximage = Math.floor(x / 2);
-    var yimage = Math.floor(y / 2);
+    var yimage = Math.floor(x);// / 2);
+    var ximage = Math.floor(y);// / 2);
     var off = (ximage * img.width + yimage) * 4;
     return pixelData[off + 0] + pixelData[off + 1] + pixelData[off + 2];
   }
@@ -34,7 +34,8 @@ $(document).ready(function () {
 
   var canvas = $('#canvas');
 
-  var vertices = [[0, 0], [0, img.height * 2 - 2], [img.width * 2 - 2, img.height * 2 - 2], [img.width * 2 - 2, 0]];
+  var xtop = img.width - 1, ytop = img.height - 1;
+  var vertices = [[0, 0], [0, ytop], [xtop, ytop], [xtop, 0]];
   Graph.fitVerticesInto(vertices, canvas.width(), canvas.height());
   var edges = [[0, 1], [1, 2], [2, 3], [3, 0]];
   Graph.markFixed(edges);
@@ -66,7 +67,7 @@ $(document).ready(function () {
   }
   triangulate.refineToRuppert(vertices, edges, qe.coEdges, qe.sideEdges, {
     minAngle: 30,
-    maxSteinerPoints: 3000,
+    maxSteinerPoints: 10000,
     trace: trace,
     isBad: isBadOnImage
   });

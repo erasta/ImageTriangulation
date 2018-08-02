@@ -602,8 +602,8 @@ var triangulate = (function () {
   function tryInsertPoint(vertices, edges, coEdges, sideEdges, p, j0) {
     var t = findEnclosingTriangle(vertices, edges, coEdges, sideEdges, p, j0);
     if (t === undefined)
-      throw "impossibru";
-      // return { success: true, affectedEdges: [] };
+      // throw "impossibru";
+      return { success: true, affectedEdges: [] };
 
     var k = t % 2, j = (t - k) / 2;
     var edge = edges[j], coEdge = coEdges[j];
