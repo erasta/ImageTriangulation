@@ -118,7 +118,7 @@ $(document).ready(function () {
       } else {
         clearInterval(interval);
       }
-    }, 10);
+    }, 1);
   });
 
   $('#canvas').click(function (event) {
