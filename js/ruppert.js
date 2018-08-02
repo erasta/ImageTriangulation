@@ -7,12 +7,12 @@ $(document).ready(function () {
   var pixelData = canvas2.getContext('2d').getImageData(0, 0, img.width, img.height).data;
   // debugger
 
-  var xtop = 2*(img.width - 1), ytop = 2*(img.height - 1);
-  // var xtop = img.width - 1, ytop = img.height - 1;
+  // var xtop = 2*(img.width - 1), ytop = 2*(img.height - 1);
+  var xtop = img.width - 1, ytop = img.height - 1;
 
   function pixheight(x, y) {
-    var ximage = Math.floor(x / 2);
-    var yimage = Math.floor(y / 2);
+    // var ximage = Math.floor(x / 2), yimage = Math.floor(y / 2);
+    var ximage = Math.floor(x), yimage = Math.floor(y);
     var off = (ximage + img.width * yimage) * 4;
     return pixelData[off + 0] + pixelData[off + 1] + pixelData[off + 2];
   }
@@ -69,7 +69,7 @@ $(document).ready(function () {
   }
   triangulate.refineToRuppert(vertices, edges, qe.coEdges, qe.sideEdges, {
     minAngle: 30,
-    maxSteinerPoints: 100000,
+    maxSteinerPoints: 30000,
     trace: trace,
     isBad: isBadOnImage
   });
@@ -118,7 +118,7 @@ $(document).ready(function () {
       } else {
         clearInterval(interval);
       }
-    }, 30);
+    }, 10);
   });
 
   $('#canvas').click(function (event) {
