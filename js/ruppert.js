@@ -7,10 +7,13 @@ $(document).ready(function () {
   var pixelData = canvas2.getContext('2d').getImageData(0, 0, img.width, img.height).data;
   // debugger
 
+  var xtop = 2*(img.width - 1), ytop = 2*(img.height - 1);
+  // var xtop = img.width - 1, ytop = img.height - 1;
+
   function pixheight(x, y) {
-    var yimage = Math.floor(x);// / 2);
-    var ximage = Math.floor(y);// / 2);
-    var off = (ximage * img.width + yimage) * 4;
+    var ximage = Math.floor(x / 2);
+    var yimage = Math.floor(y / 2);
+    var off = (ximage + img.width * yimage) * 4;
     return pixelData[off + 0] + pixelData[off + 1] + pixelData[off + 2];
   }
 
@@ -23,8 +26,8 @@ $(document).ready(function () {
     va.set(a[0], a[1], pixheight(a[0], a[1]));
     vb.set(b[0], b[1], pixheight(b[0], b[1]));
     vc.set(c[0], c[1], pixheight(c[0], c[1]));
-    var xm = (a[0] + b[0] + c[0]) / 3.0;
-    var ym = (a[1] + b[1] + c[1]) / 3.0;
+    var xm = (va.x + vb.x + vc.x) / 3.0;
+    var ym = (va.y + vb.y + vc.y) / 3.0;
     vm.set(xm, ym, pixheight(xm, ym));
     plane.setFromCoplanarPoints(va, vb, vc);
     line.start.set(xm, ym, 0);
@@ -34,7 +37,6 @@ $(document).ready(function () {
 
   var canvas = $('#canvas');
 
-  var xtop = img.width - 1, ytop = img.height - 1;
   var vertices = [[0, 0], [0, ytop], [xtop, ytop], [xtop, 0]];
   Graph.fitVerticesInto(vertices, canvas.width(), canvas.height());
   var edges = [[0, 1], [1, 2], [2, 3], [3, 0]];
@@ -67,7 +69,7 @@ $(document).ready(function () {
   }
   triangulate.refineToRuppert(vertices, edges, qe.coEdges, qe.sideEdges, {
     minAngle: 30,
-    maxSteinerPoints: 10000,
+    maxSteinerPoints: 100000,
     trace: trace,
     isBad: isBadOnImage
   });
