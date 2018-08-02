@@ -8,6 +8,13 @@ $("document").ready(function () {
         }
         fr.readAsDataURL(e.target.files[0]);
     });
+
+    $("#widthImage").change(function (e) {
+        $('#img')[0].width = $('#chosenWidth')[0].value = $('#widthImage')[0].value;
+        setTimeout(function() {
+            $('#chosenHeight')[0].value = $('#img')[0].height;
+        }, 100);
+    });
 });
 
 function loadImage(img) {

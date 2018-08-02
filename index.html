@@ -1,16 +1,14 @@
 <!DOCTYPE html>
 
 <head>
-  <title>Triangulations - Ruppert Test</title>
+  <title>Image Triangulation</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/95/three.js"></script>
-  <!-- <script src="lib/jquery-1.11.2.min.js"></script> -->
   <script src="lib/jcanvas.min.js"></script>
   <script src="lib/queue.min.js"></script>
   <script src="tri/geometry.js"></script>
   <script src="tri/graph.js"></script>
   <script src="tri/triangulate.js"></script>
-  <!-- <script src="data/key.js"></script> -->
   <script src="lib/sobel.js"></script>
   <script src="js/ruppert.js"></script>
   <script src="js/loadimage.js"></script>
@@ -18,7 +16,13 @@
 
 <body>
   <!-- <div style="vertical-align: top;"> -->
+  Load Image:
   <input type="file" name="Load" id="loadImage"></input>
+  <br/> Image width:
+  <input type="range" name="Width" id="widthImage" min="20" max="1500" value="400"></input>
+  <input type="number" id="chosenWidth" value="400" disabled></input>
+  x
+  <input type="number" id="chosenHeight" value="600" disabled></input>
   <br/>
   <button id="work" onclick="work()">Work</button>
   <br/>
