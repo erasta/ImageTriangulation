@@ -1,16 +1,12 @@
 var start;
 function prn(txt) {
-  console.log(((Date.now() - start)/ 1000.0) + ": " + txt);
+  console.log(((Date.now() - start) / 1000.0) + ": " + txt);
 }
 
 function work() {
   start = Date.now();
   var img = document.getElementById('img');
-  var canvas2 = document.createElement('canvas');
-  canvas2.width = img.width;
-  canvas2.height = img.height;
-  canvas2.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
-  var imageData = canvas2.getContext('2d').getImageData(0, 0, img.width, img.height);
+  var imageData = loadImage(img);
   var pixelData = imageData.data;
   prn('got image ' + img.width + 'x' + img.height);
   // Sobel constructor returns an Uint8ClampedArray with sobel data
