@@ -6,4 +6,4 @@ Fork from: https://github.com/mkacz91/Triangulations
 Use on https://erasta.github.io/ImageTriangulation
 
 Sample:
-<img src="sample.png"></img>
+<img src="out/gaga.png"></img>
