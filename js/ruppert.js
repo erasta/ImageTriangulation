@@ -106,14 +106,26 @@ function* dowork() {
   yield 'refineToRuppert';
 }
 
+var shouldStop;
+function show(txt) {
+  $("#log").text(((Date.now() - start) / 1000.0) + "s: " + txt);
+}
+
 function work() {
+  var img = $('#img')[0];
+  shouldStop = false;
   var gen = dowork();
   function again() {
     setTimeout(() => {
+      if (shouldStop) {
+        show("Stopped");
+        return;
+      }
       var txt = gen.next();
       if (txt.done) return;
-      $("#log").text(((Date.now() - start) / 1000.0) + ": " + txt.value);
+      show(txt.value);
       if (canvas && vertices && edges && face) {
+        canvas[0].getContext('2d').drawImage(img, 0,0, img.width, img.height);
         g = new Graph(vertices, edges, [face]);
         g.draw(canvas);
       }
@@ -121,4 +133,8 @@ function work() {
     }, 1);
   }
   again();
+}
+
+function stop() {
+  shouldStop = true;
 }

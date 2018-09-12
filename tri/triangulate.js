@@ -704,7 +704,7 @@ var triangulate = (function () {
         steinerLeft > 0 &&
         (encroachedEdges.length > 0 || badTriangles.length > 0 || steinerPts.length > 0)
       ) {
-        if (++counter % 500 == 0) yield counter;
+        if (++counter % 100 == 0) yield counter + " rupert iteration";
         var affectedEdges = 0;
         var forceSplit = [];
         var traceEntry = {};

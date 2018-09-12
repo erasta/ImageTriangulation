@@ -4,12 +4,12 @@ function Graph (vertices, edges, faces) {
   this.faces    = faces    === undefined ? [] : faces;
 
   this.vertexStyle = {
-    color: 'black',
+    color: 'white',
     radius: 1,
     showLabel: false
   };
   this.edgeStyle = {
-    color: 'black',
+    color: 'white',
     width: 1,
     showLabel: false
   };
@@ -120,7 +120,7 @@ Graph.prototype = (function () {
         ctx.closePath();
       }
       ctx.fillStyle = style;
-      ctx.fill();
+      // ctx.fill();
     }});
   }
 
