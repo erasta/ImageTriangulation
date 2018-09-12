@@ -108,7 +108,7 @@ function* dowork() {
 
 var shouldStop;
 function show(txt) {
-  $("#log").text(((Date.now() - start) / 1000.0) + "s: " + txt);
+  $("#log").text(((Date.now() - start) / 1000.0) + "s: " + txt + "\n" + $("#log").text());
 }
 
 function work() {
