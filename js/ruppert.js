@@ -1,17 +1,16 @@
 var start;
-function prn(txt) {
-  console.log(((Date.now() - start) / 1000.0) + ": " + txt);
-}
+var vertices, edges, face;
+var canvas;
 
-function work() {
+function* dowork() {
   start = Date.now();
   var img = document.getElementById('img');
   var imageData = loadImage(img);
   var pixelData = imageData.data;
-  prn('got image ' + img.width + 'x' + img.height);
+  yield 'got image ' + img.width + 'x' + img.height;
   // Sobel constructor returns an Uint8ClampedArray with sobel data
   var sobelData = Sobel(imageData);
-  prn('done Sobel');
+  yield 'done Sobel';
 
 
   // [sobelData].toImageData() returns a new ImageData object
@@ -52,24 +51,30 @@ function work() {
     return Math.abs(vo.z - vm.z) > 10;
   }
 
-  var canvas = $('#canvas');
+  canvas = $('#canvas');
 
-  var vertices = [[0, 0], [0, ytop], [xtop, ytop], [xtop, 0]];
+  vertices = [[0, 0], [0, ytop], [xtop, ytop], [xtop, 0]];
   Graph.fitVerticesInto(vertices, canvas.width(), canvas.height());
-  var edges = [[0, 1], [1, 2], [2, 3], [3, 0]];
+  edges = [[0, 1], [1, 2], [2, 3], [3, 0]];
   Graph.markFixed(edges);
   Graph.markExternal(edges);
-  var face = [[0, 1, 2, 3]];
+  face = [[0, 1, 2, 3]];
 
-  prn('prepare graph');
+
+  yield 'prepare graph';
+
 
   var diags = triangulate.face(vertices, face);
-  prn('triangulate.face');
+
+  yield 'triangulate.face';
+
   edges = edges.concat(diags);
   var qe = triangulate.makeQuadEdge(vertices, edges);
-  prn('makeQuadEdge');
+  yield 'makeQuadEdge';
+
+
   triangulate.refineToDelaunay(vertices, edges, qe.coEdges, qe.sideEdges);
-  prn('refineToDelaunay');
+  yield 'refineToDelaunay';
   var trace = [];
   var verticesBackup = vertices.slice();
   var edgesBackup = edges.slice();
@@ -79,7 +84,7 @@ function work() {
     coEdges0[j] = qe.coEdges[j].slice();
     sideEdges0[j] = qe.sideEdges[j].slice();
   }
-  prn('slice edges');
+  yield 'slice edges';
 
   var steinerPts = [];
   for (var y = 0; y < img.height; ++y) {
@@ -89,18 +94,31 @@ function work() {
       }
     }
   }
-  prn('add sobel extreme to steiner points');
+  yield 'add sobel extreme to steiner points';
 
-  triangulate.refineToRuppert(vertices, edges, qe.coEdges, qe.sideEdges, {
+  yield* triangulate.refineToRuppert(vertices, edges, qe.coEdges, qe.sideEdges, {
     minAngle: 30,
     maxSteinerPoints: 30000,
     trace: trace,
     isBad: isBadOnImage,
     forceSteinerPoints: steinerPts
   });
-  prn('refineToRuppert');
+  yield 'refineToRuppert';
+}
 
-  g = new Graph(vertices, edges, [face]);
-  g.draw(canvas);//, { edgeNumbers: true });
-  prn('draw');
+function work() {
+  var gen = dowork();
+  function again() {
+    setTimeout(() => {
+      var txt = gen.next();
+      if (txt.done) return;
+      $("#log").text(((Date.now() - start) / 1000.0) + ": " + txt.value);
+      if (canvas && vertices && edges && face) {
+        g = new Graph(vertices, edges, [face]);
+        g.draw(canvas);
+      }
+      again();
+    }, 1);
+  }
+  again();
 }

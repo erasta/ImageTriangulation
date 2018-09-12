@@ -671,7 +671,8 @@ var triangulate = (function () {
   var refineToRuppert = (function () {
     var encroached = [];
     var bad = [];
-    return function (vertices, edges, coEdges, sideEdges, settings) {
+    return function* (vertices, edges, coEdges, sideEdges, settings) {
+      var counter = 0;
       settings = settings === undefined
         ? {} : settings;
       steinerLeft = settings.maxSteinerPoints === undefined
@@ -683,7 +684,7 @@ var triangulate = (function () {
       var isBadOrig = triangleIsBad(minAngle, maxArea);
       var isBad = settings.isBad === undefined
         ? isBadOrig : //triangleIsBad(minAngle, maxArea);
-        function(a, b, c) {
+        function (a, b, c) {
           return isBadOrig(a, b, c) || settings.isBad(a, b, c);
         };
       var steinerPts = settings.forceSteinerPoints || [];
@@ -703,6 +704,7 @@ var triangulate = (function () {
         steinerLeft > 0 &&
         (encroachedEdges.length > 0 || badTriangles.length > 0 || steinerPts.length > 0)
       ) {
+        if (++counter % 500 == 0) yield counter;
         var affectedEdges = 0;
         var forceSplit = [];
         var traceEntry = {};
