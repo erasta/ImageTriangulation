@@ -154,8 +154,12 @@ function repaint(color) {
       } else {
         for (var f = 0; f < g.faces.length - 1; ++f) {
           var fc = g.faces[f][0];
-          var vfirst = g.vertices[fc[0]];
-          g.drawFace(canvas, g.faces[f], g.vertices, getPixelColor(ctx, vfirst[0], vfirst[1]));
+          var xx = 0, yy = 0;
+          for (var j = 0; j < fc.length; ++j) {
+            xx += g.vertices[fc[j]][0] / fc.length;
+            yy += g.vertices[fc[j]][1] / fc.length;
+          }
+          g.drawFace(canvas, g.faces[f], g.vertices, getPixelColor(ctx, xx, yy));
         }
       }
     }
