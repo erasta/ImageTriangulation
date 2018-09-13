@@ -126,13 +126,17 @@ function getRandomColor() {
 function repaint(color) {
   lineColor = color || lineColor;
   if (canvas && vertices && edges && face) {
-    canvas[0].getContext('2d').drawImage(img, 0,0, img.width, img.height);
-    var g = new Graph(vertices, edges, []);//, [face]);
-    g.computeFaces();
-    // g.vertexStyle.color = g.edgeStyle.color = lineColor;
-    // g.draw(canvas);
-    for (var f = 0; f < g.faces.length - 1; ++f) {
-      g.drawFace (canvas, g.faces[f], g.vertices, getRandomColor());
+    canvas[0].getContext('2d').drawImage(img, 0, 0, img.width, img.height);
+    var graphStyle = $("input[name='graph-style']:checked").val();
+    var g = new Graph(vertices, edges, [face]);
+    if (graphStyle == "edges") {
+      g.vertexStyle.color = g.edgeStyle.color = lineColor;
+      g.draw(canvas);
+    } else {
+      g.computeFaces();
+      for (var f = 0; f < g.faces.length - 1; ++f) {
+        g.drawFace(canvas, g.faces[f], g.vertices, getRandomColor());
+      }
     }
   }
 }
