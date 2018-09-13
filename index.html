@@ -12,11 +12,18 @@
   <script src="lib/sobel.js"></script>
   <script src="js/ruppert.js"></script>
   <script src="js/loadimage.js"></script>
+  <style>
+    @font-face {
+      font-family: 'Patua One';
+      src: url('/lib/PatuaOne-Regular.ttf');
+    }
+  </style>
 </head>
 
 <body>
   <div align="center">
-    Load Image:
+    <h1 style="font-family: 'Patua One'; font-size: 50px; text-shadow: 0px 3px rgba(0, 0, 0, 0.5);
+    font-weight: bold; margin-bottom: 0px; margin-top: 0px;">Image Triangulation</h1>
     <input type="file" name="Load" id="loadImage"></input>
     <br/> Image width:
     <input type="range" name="Width" id="widthImage" min="20" max="1500" value="400"></input>
@@ -36,5 +43,6 @@
     <!-- <img id="img" src="data/chrome-logo.jpg" width="400" style="vertical-align: top;"></img> -->
     <!-- <img id="img" src="data/LadyGagaVector.jpg" width="400" style="vertical-align: top;"></img> -->
     <canvas id="canvas" width="400px" height="600px" style="border:1px solid #000000;"></canvas>
+    <br/> Fork from: <a href="https://github.com/mkacz91/Triangulations">github.com/mkacz91/Triangulations</a>
   </div>
 </body>
