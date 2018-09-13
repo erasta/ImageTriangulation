@@ -123,10 +123,23 @@ function getRandomColor() {
   return color;
 }
 
+function rgbToHex(r, g, b) {
+  if (r > 255 || g > 255 || b > 255)
+      throw "Invalid color component";
+  return ((r << 16) | (g << 8) | b).toString(16);
+}
+
+function getPixelColor(ctx, x, y) {
+  var p = ctx.getImageData(Math.floor(x), Math.floor(y), 1, 1).data;
+  var hex = "#" + ("000000" + rgbToHex(p[0], p[1], p[2])).slice(-6);
+  return hex;
+}
+
 function repaint(color) {
   lineColor = color || lineColor;
   if (canvas && vertices && edges && face) {
-    canvas[0].getContext('2d').drawImage(img, 0, 0, img.width, img.height);
+    var ctx = canvas[0].getContext('2d');
+    ctx.drawImage(img, 0, 0, img.width, img.height);
     var graphStyle = $("input[name='graph-style']:checked").val();
     var g = new Graph(vertices, edges, [face]);
     if (graphStyle == "edges") {
@@ -134,8 +147,16 @@ function repaint(color) {
       g.draw(canvas);
     } else {
       g.computeFaces();
-      for (var f = 0; f < g.faces.length - 1; ++f) {
-        g.drawFace(canvas, g.faces[f], g.vertices, getRandomColor());
+      if (graphStyle == "random") {
+        for (var f = 0; f < g.faces.length - 1; ++f) {
+          g.drawFace(canvas, g.faces[f], g.vertices, getRandomColor());
+        }
+      } else {
+        for (var f = 0; f < g.faces.length - 1; ++f) {
+          var fc = g.faces[f][0];
+          var vfirst = g.vertices[fc[0]];
+          g.drawFace(canvas, g.faces[f], g.vertices, getPixelColor(ctx, vfirst[0], vfirst[1]));
+        }
       }
     }
   }

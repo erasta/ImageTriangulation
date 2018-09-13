@@ -43,9 +43,9 @@
   </div>
   <div style="position: absolute; right: 10px; top: 10px; ">
     <h3>Graph style:</h3>
-    <input type='radio' name='graph-style' value='midcolor' onchange="repaint()" />Mid color<br/>
-    <input type='radio' name='graph-style' value='random' onchange="repaint()" checked="true"/>Random color<br/>
-    <input type='radio' name='graph-style' value='edges' onchange="repaint()"/>Edges in color<br/>
+    <input type='radio' name='graph-style' value='midcolor' onchange="repaint()" checked="true" />Mid color<br/>
+    <input type='radio' name='graph-style' value='random' onchange="repaint()" />Random color<br/>
+    <input type='radio' name='graph-style' value='edges' onchange="repaint()" />Edges in color<br/>
     <input type='text' id="flat" />
     <script>$("#flat").spectrum({ flat: true, showButtons: false, move: function (c) { repaint(c.toHexString()) } });</script>
   </div>
