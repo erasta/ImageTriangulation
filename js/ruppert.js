@@ -3,7 +3,7 @@
 var start;
 var vertices, edges, face;
 var canvas;
-var color = 'white';
+var lineColor = 'white';
 
 function* dowork() {
   start = Date.now();
@@ -114,6 +114,16 @@ function show(txt) {
   $("#log").text(((Date.now() - start) / 1000.0) + "s: " + txt + "\n" + $("#log").text());
 }
 
+function repaint(color) {
+  lineColor = color || lineColor;
+  if (canvas && vertices && edges && face) {
+    canvas[0].getContext('2d').drawImage(img, 0,0, img.width, img.height);
+    var g = new Graph(vertices, edges, [face]);
+    g.vertexStyle.color = g.edgeStyle.color = lineColor;
+    g.draw(canvas);
+  }
+}
+
 function work() {
   var img = $('#img')[0];
   shouldStop = false;
@@ -127,12 +137,7 @@ function work() {
       var txt = gen.next();
       if (txt.done) return;
       show(txt.value);
-      if (canvas && vertices && edges && face) {
-        canvas[0].getContext('2d').drawImage(img, 0,0, img.width, img.height);
-        var g = new Graph(vertices, edges, [face]);
-        g.vertexStyle.color = g.edgeStyle.color = color;
-        g.draw(canvas);
-      }
+      repaint();
       again();
     }, 1);
   }
