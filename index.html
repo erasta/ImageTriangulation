@@ -4,6 +4,8 @@
   <title>Image Triangulation</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/95/three.js"></script>
+  <script src='lib/spectrum.js'></script>
+  <link rel='stylesheet' href='lib/spectrum.css' />
   <script src="lib/jcanvas.min.js"></script>
   <script src="lib/queue.min.js"></script>
   <script src="tri/geometry.js"></script>
@@ -29,12 +31,11 @@
     <button id="work" onclick="work()">Work</button>
     <button id="stop" onclick="stop()">Stop</button>
     <br/>
-    <input type="file" name="Load" id="loadImage"></input>
+    <input type="file" name="Load" id="loadImage" />
     <br/> Image width:
-    <input type="range" name="Width" id="widthImage" min="20" max="1500" value="400"></input>
-    <input type="number" id="chosenWidth" value="400" disabled></input>
-    x
-    <input type="number" id="chosenHeight" value="600" disabled></input>
+    <input type="range" name="Width" id="widthImage" min="20" max="1500" value="400" />
+    <input type="number" id="chosenWidth" value="400" disabled/> x
+    <input type="number" id="chosenHeight" value="600" disabled/>
     <br/>
     <!-- <img id="img" src="data/sun.jpg" width="400" style="vertical-align: top;"></img> -->
     <!-- <img id="img" src="data/me.jpg" width="600" style="vertical-align: top;"></img> -->
@@ -44,5 +45,9 @@
     <!-- <img id="img" src="data/LadyGagaVector.jpg" width="400" style="vertical-align: top;"></img> -->
     <canvas id="canvas" width="300px" height="600px" style="border:1px solid #000000;"></canvas>
     <br/> Fork from: <a href="https://github.com/mkacz91/Triangulations">github.com/mkacz91/Triangulations</a>
+  </div>
+  <div style="position: absolute; right: 10px; top: 10px; ">
+    <input type='text' id="flat" />
+    <script>$("#flat").spectrum({ flat: true, showButtons: false, move: function(c) { color = c.toHexString()} });</script>
   </div>
 </body>

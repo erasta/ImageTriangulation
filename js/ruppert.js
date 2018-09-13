@@ -1,6 +1,9 @@
+'use strict';
+
 var start;
 var vertices, edges, face;
 var canvas;
+var color = 'white';
 
 function* dowork() {
   start = Date.now();
@@ -126,7 +129,8 @@ function work() {
       show(txt.value);
       if (canvas && vertices && edges && face) {
         canvas[0].getContext('2d').drawImage(img, 0,0, img.width, img.height);
-        g = new Graph(vertices, edges, [face]);
+        var g = new Graph(vertices, edges, [face]);
+        g.vertexStyle.color = g.edgeStyle.color = color;
         g.draw(canvas);
       }
       again();

@@ -700,15 +700,18 @@ var triangulate = (function () {
         bad[j] = true;
       }
 
+      var iterDoing = "";
       while (
         steinerLeft > 0 &&
         (encroachedEdges.length > 0 || badTriangles.length > 0 || steinerPts.length > 0)
       ) {
-        if (++counter % 100 == 0) yield counter + " rupert iteration";
+        if (++counter % 100 == 0) yield counter + " " + iterDoing + " rupert iteration";
+        iterDoing = "";
         var affectedEdges = 0;
         var forceSplit = [];
         var traceEntry = {};
         if (steinerPts.length > 0) {
+          iterDoing = "steiner";
           var stp = steinerPts.pop();
           var j = findEnclosingTriangle(vertices, edges, coEdges, sideEdges, stp, 0);
           j = Math.floor(j / 2); // triangle real index, see evil hack on findEnclosingTriangle() comment
@@ -729,6 +732,7 @@ var triangulate = (function () {
             break;
           }
         } else if (encroachedEdges.length > 0) {
+          iterDoing = "edges";
           var s = Math.floor(Math.random() * encroachedEdges.length);
           arrToBack(encroachedEdges, s);
           var j = encroachedEdges.pop();
@@ -739,6 +743,7 @@ var triangulate = (function () {
             traceEntry.split = [j];
           }
         } else if (badTriangles.length > 0) {
+          iterDoing = "triangles";
           var s = Math.floor(Math.random() * badTriangles.length);
           arrToBack(badTriangles, s);
           var j = badTriangles[badTriangles.length - 1];
