@@ -113,14 +113,16 @@ Graph.prototype = (function () {
         var poly = f[l];
         var v = vertices[poly[0]];
         ctx.moveTo(v[0], v[1]);
+        // console.log(v);
         for (var m = 1; m < poly.length; ++m) {
           v = vertices[poly[m]];
           ctx.lineTo(v[0], v[1]);
+          // console.log(v);
         }
         ctx.closePath();
       }
       ctx.fillStyle = style;
-      // ctx.fill();
+      ctx.fill();
     }});
   }
 
@@ -140,6 +142,8 @@ Graph.prototype = (function () {
 
 return {
   constructor: Graph,
+
+  drawFace: drawFace,
 
   // Returns the orientation of a face, defined as the orientation of the
   // outermost polygon component.
@@ -164,11 +168,11 @@ return {
   },
 
   draw: function (c) {
-    for (var k = 0; k < this.faces.length; ++k) {
-      var face = this.faces[k];
-      var style = getFaceStyle(face, this.faceStyle);
-      drawFace(c, face, this.vertices, style);
-    }
+    // for (var k = 0; k < this.faces.length; ++k) {
+    //   var face = this.faces[k];
+    //   var style = getFaceStyle(face, this.faceStyle);
+    //   drawFace(c, face, this.vertices, style);
+    // }
 
     for (var j = 0; j < this.edges.length; ++j) {
       var e = this.edges[j];

@@ -114,13 +114,26 @@ function show(txt) {
   $("#log").text(((Date.now() - start) / 1000.0) + "s: " + txt + "\n" + $("#log").text());
 }
 
+function getRandomColor() {
+  var letters = '0123456789abcdef';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
 function repaint(color) {
   lineColor = color || lineColor;
   if (canvas && vertices && edges && face) {
     canvas[0].getContext('2d').drawImage(img, 0,0, img.width, img.height);
-    var g = new Graph(vertices, edges, [face]);
-    g.vertexStyle.color = g.edgeStyle.color = lineColor;
-    g.draw(canvas);
+    var g = new Graph(vertices, edges, []);//, [face]);
+    g.computeFaces();
+    // g.vertexStyle.color = g.edgeStyle.color = lineColor;
+    // g.draw(canvas);
+    for (var f = 0; f < g.faces.length - 1; ++f) {
+      g.drawFace (canvas, g.faces[f], g.vertices, getRandomColor());
+    }
   }
 }
 

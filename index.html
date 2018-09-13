@@ -37,17 +37,13 @@
     <input type="number" id="chosenWidth" value="400" disabled/> x
     <input type="number" id="chosenHeight" value="600" disabled/>
     <br/>
-    <!-- <img id="img" src="data/sun.jpg" width="400" style="vertical-align: top;"></img> -->
-    <!-- <img id="img" src="data/me.jpg" width="600" style="vertical-align: top;"></img> -->
     <img id="img" src="data/iceland.jpg" width="300" style="vertical-align: top; border:1px solid #000000;" onload="fixSizesByImage()"></img>
-    <!-- <img id="img" src="data/me2.jpg" width="400" style="vertical-align: top;"></img> -->
-    <!-- <img id="img" src="data/chrome-logo.jpg" width="400" style="vertical-align: top;"></img> -->
-    <!-- <img id="img" src="data/LadyGagaVector.jpg" width="400" style="vertical-align: top;"></img> -->
     <canvas id="canvas" width="300px" height="600px" style="border:1px solid #000000;"></canvas>
-    <br/> Fork from: <a href="https://github.com/mkacz91/Triangulations">github.com/mkacz91/Triangulations</a>
+    <br/> Fork from: <a href="https://github.com/mkacz91/Triangulations">mkacz91</a>
   </div>
   <div style="position: absolute; right: 10px; top: 10px; ">
     <input type='text' id="flat" />
-    <script>$("#flat").spectrum({ flat: true, showButtons: false, move: function(c) { repaint(c.toHexString())} });</script>
+    <script>$("#flat").spectrum({ flat: true, showButtons: false, move: function (c) { repaint(c.toHexString()) } });</script>
   </div>
+  <!-- images:  data/sun.jpg data/me.jpg data/me2.jpg data/chrome-logo.jpg data/LadyGagaVector.jpg -->
 </body>
