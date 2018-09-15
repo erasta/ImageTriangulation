@@ -285,7 +285,7 @@ return {
       var i = edges[j0][1];
       var iFirst = iPrev;
       var poly = [iPrev];
-      while (i != iFirst) {
+      while (i != iFirst && poly.length < 1000) {
         // Find the edge with the smallest angle with respect to the incoming
         // direction.
         var cmp = geom.angleCompare(vertices[i], vertices[iPrev]);

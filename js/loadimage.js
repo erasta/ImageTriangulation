@@ -1,6 +1,7 @@
 "use strict";
 
 function readImageAsUrl(f) {
+    stop();
     var fr = new FileReader();
     fr.onload = function () {
         $("#img")[0].src = fr.result;
