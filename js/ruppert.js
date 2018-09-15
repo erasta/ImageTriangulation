@@ -137,10 +137,11 @@ function getPixelColor(ctx, x, y) {
 
 function repaint(color) {
   lineColor = color || lineColor;
+  var graphStyle = $("input[name='graph-style']:checked").val();
+  $('.sp-container')[0].style.visibility = graphStyle == "edges" ? "" : "hidden";
   if (canvas && vertices && edges && face) {
     var ctx = canvas[0].getContext('2d');
     ctx.drawImage(img, 0, 0, img.width, img.height);
-    var graphStyle = $("input[name='graph-style']:checked").val();
     var g = new Graph(vertices, edges, [face]);
     if (graphStyle == "edges") {
       g.vertexStyle.color = g.edgeStyle.color = lineColor;
