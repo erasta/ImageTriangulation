@@ -15,7 +15,6 @@ function* dowork() {
   var sobelData = Sobel(imageData);
   yield 'done Sobel';
 
-
   // [sobelData].toImageData() returns a new ImageData object
   var sobelImageData = sobelData.toImageData();
   var sobelPixels = sobelImageData.data;
@@ -62,25 +61,18 @@ function* dowork() {
   Graph.markFixed(edges);
   Graph.markExternal(edges);
   face = [[0, 1, 2, 3]];
-
-
   yield 'prepare graph';
 
-
   var diags = triangulate.face(vertices, face);
-
   yield 'triangulate.face';
 
   edges = edges.concat(diags);
   var qe = triangulate.makeQuadEdge(vertices, edges);
   yield 'makeQuadEdge';
 
-
   triangulate.refineToDelaunay(vertices, edges, qe.coEdges, qe.sideEdges);
   yield 'refineToDelaunay';
   var trace = [];
-  var verticesBackup = vertices.slice();
-  var edgesBackup = edges.slice();
   var coEdges0 = [];
   var sideEdges0 = [];
   for (var j = 0; j < edges.length; ++j) {
@@ -89,10 +81,13 @@ function* dowork() {
   }
   yield 'slice edges';
 
+  var sensitivity = Number($('#Sensitivity').val());
+  var iterations = Number($('#Iterations').val());
+
   var steinerPts = [];
   for (var y = 0; y < img.height; ++y) {
     for (var x = 0; x < img.width; ++x) {
-      if (pixsobel(x, y) > 240) {
+      if (pixsobel(x, y) > sensitivity) {
         steinerPts.push([x, y]);
       }
     }
@@ -101,7 +96,7 @@ function* dowork() {
 
   yield* triangulate.refineToRuppert(vertices, edges, qe.coEdges, qe.sideEdges, {
     minAngle: 30,
-    maxSteinerPoints: 30000,
+    maxSteinerPoints: iterations,
     trace: trace,
     isBad: isBadOnImage,
     forceSteinerPoints: steinerPts
