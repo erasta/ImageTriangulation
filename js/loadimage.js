@@ -33,12 +33,15 @@ $('#img4canvas').ready(() => {
     $('#canvas')[0].getContext('2d').drawImage($('#img4canvas')[0], 0, 0);
 });
 
-function loadImage(img) {
+function imageDataFromImage(img) {
     var canvas = document.createElement('canvas');
     canvas.width = img.width;
     canvas.height = img.height;
     canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
-    var imageData = canvas.getContext('2d').getImageData(0, 0, img.width, img.height);
+    return canvas.getContext('2d').getImageData(0, 0, img.width, img.height);
+}
+function loadImage(img) {
+    var imageData = imageDataFromImage(img);
     fixSizesByImage();
     return imageData;
 }
@@ -75,9 +78,46 @@ function downloadObj() {
     }
     str += "# Faces\n";
     for (var f = 0; f < g.faces.length - 1; ++f) {
-        var fc = g.faces[f][0];
         str += "f " + g.faces[f][0].map(x => x + 1).join(" ") + "\n";
     }
-    var blob = new Blob([str], {type: "text/plain;charset=utf-8"});
+    var blob = new Blob([str], { type: "text/plain" });
     saveAs(blob, "triangulation.obj");
+}
+
+function downloadPly() {
+    if (!vertices || !edges || !face) return;
+    var g = new Graph(vertices, edges, [face]);
+    g.computeFaces();
+    var str = "ply\n";
+    str += "format ascii 1.0\n";
+    str += "comment created by erasta\n";
+    str += "element vertex " + vertices.length + "\n";
+    str += "property float32 x\n";
+    str += "property float32 y\n";
+    str += "property float32 z\n";
+    str += "element face " + (g.faces.length - 1) + "\n";
+    str += "property list uint8 int32 vertex_indices\n";
+    str += "property uchar red\n";
+    str += "property uchar green\n";
+    str += "property uchar blue\n";
+    str += "end_header\n";
+    for (var i = 0; i < vertices.length; ++i) {
+        str += vertices[i].join(' ') + " 0\n";
+    }
+    var imageData = imageDataFromImage($('#img')[0]);
+    for (var f = 0; f < g.faces.length - 1; ++f) {
+        var fc = g.faces[f][0];
+        var xx = 0, yy = 0;
+        for (var j = 0; j < fc.length; ++j) {
+          xx += g.vertices[fc[j]][0] / fc.length;
+          yy += g.vertices[fc[j]][1] / fc.length;
+        }
+
+        var off = (Math.floor(xx) + imageData.width * Math.floor(yy)) * 4;
+        var colors = imageData.data[off + 0] + " " + imageData.data[off + 1] + " " + imageData.data[off + 2];
+        // var p = ctx.getImageData(Math.floor(xx), Math.floor(yy), 1, 1).data;
+        str += "3 " + g.faces[f][0].join(" ") + " " + colors + "\n";
+    }
+    var blob = new Blob([str], { type: "text/plain" });
+    saveAs(blob, "triangulation.ply");
 }
