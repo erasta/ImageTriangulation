@@ -101,7 +101,7 @@ function* dowork() {
     isBad: isBadOnImage,
     forceSteinerPoints: steinerPts
   });
-  yield 'refineToRuppert';
+  yield 'Done.';
 }
 
 var shouldStop;
