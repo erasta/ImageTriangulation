@@ -27,6 +27,8 @@ $("document").ready(function () {
         e.preventDefault();
         readImageAsUrl(e.originalEvent.dataTransfer.files[0]);
     });
+
+    $('#canvas')[0].getContext('2d').drawImage($('#img4canvas')[0], 0, 0);
 });
 
 function loadImage(img) {
