@@ -4,6 +4,7 @@
   <title>Image Triangulation</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/95/three.js"></script>
+  <script src="https://fastcdn.org/FileSaver.js/1.1.20151003/FileSaver.min.js"></script>
   <script src='lib/spectrum.js'></script>
   <link rel='stylesheet' href='lib/spectrum.css' />
   <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -46,6 +47,7 @@
         </td>
         <td>
           <a id="download" download="triangulation.png"><button type="button" onClick="downloadImage()">Download image</button></a>
+          <button type="button" onClick="downloadObj()">Download OBJ</button>
         </td>
       </tr>
       <tr>

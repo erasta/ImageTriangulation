@@ -64,3 +64,20 @@ function downloadImage() {
     download.setAttribute("href", image);
     //download.setAttribute("download","archive.png");
 }
+
+function downloadObj() {
+    if (!vertices || !edges || !face) return;
+    var g = new Graph(vertices, edges, [face]);
+    g.computeFaces();
+    var str = "# Vertices\n";
+    for (var i = 0; i < vertices.length; ++i) {
+        str += "v " + vertices[i].join(' ') + " 0\n";
+    }
+    str += "# Faces\n";
+    for (var f = 0; f < g.faces.length - 1; ++f) {
+        var fc = g.faces[f][0];
+        str += "f " + g.faces[f][0].map(x => x + 1).join(" ") + "\n";
+    }
+    var blob = new Blob([str], {type: "text/plain;charset=utf-8"});
+    saveAs(blob, "triangulation.obj");
+}
