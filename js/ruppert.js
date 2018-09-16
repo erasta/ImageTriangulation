@@ -4,11 +4,12 @@ var start;
 var vertices, edges, face;
 var canvas;
 var lineColor = 'white';
+var imageData;
 
 function* dowork() {
   start = Date.now();
   var img = document.getElementById('img');
-  var imageData = loadImage(img);
+  imageData = loadImage(img);
   var pixelData = imageData.data;
   yield 'got image ' + img.width + 'x' + img.height;
   // Sobel constructor returns an Uint8ClampedArray with sobel data
@@ -125,8 +126,10 @@ function rgbToHex(r, g, b) {
 }
 
 function getPixelColor(ctx, x, y) {
-  var p = ctx.getImageData(Math.floor(x), Math.floor(y), 1, 1).data;
-  var hex = "#" + ("000000" + rgbToHex(p[0], p[1], p[2])).slice(-6);
+  var off = (Math.floor(x) + imageData.width * Math.floor(y)) * 4;
+  var colors = rgbToHex( imageData.data[off + 0], imageData.data[off + 1], + imageData.data[off + 2]);
+  // var p = ctx.getImageData(Math.floor(x), Math.floor(y), 1, 1).data;
+  var hex = "#" + ("000000" + colors).slice(-6);
   return hex;
 }
 
