@@ -39,15 +39,30 @@
     <input type="number" id="chosenWidth" value="400" disabled/> x
     <input type="number" id="chosenHeight" value="600" disabled/>
     <br/>
-    <label style="font-size: small">Drop image or </label><input type="file" name="Load" id="loadImage" />
-    <br/>
-    <img id="img" src="data/iceland.jpg" width="300" style="vertical-align: top; border:1px solid #000000;" onload="fixSizesByImage()"></img>
-    <canvas id="canvas" width="300px" height="600px" style="border:1px solid #000000;"></canvas>
-    <br/><a href="https://github.com/erasta/ImageTriangulation">View my code</a>
-    <br/><a href="https://github.com/mkacz91/Triangulations">(forked from)</a>
+    <table>
+      <tr>
+        <td>
+          <label style="font-size: small">Drop image or </label><input type="file" name="Load" id="loadImage" />
+        </td>
+        <td>
+          <a id="download" download="triangulation.png"><button type="button" onClick="downloadImage()">Download image</button></a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <img id="img" src="data/iceland.jpg" width="300" style="vertical-align: top; border:1px solid #000000;" onload="fixSizesByImage()"/>
+        </td>
+        <td>
+          <canvas id="canvas" width="300px" height="600px" style="border:1px solid #000000;"></canvas>
+        </td>
+      </tr>
+    </table>
+    <br/>View <a href="https://github.com/erasta">my</a> code on <a href="https://github.com/erasta/ImageTriangulation">GitHub</a>
+    <br/>Assisted by <a href="https://github.com/adishavit">Adi Shavit</a>
+    <br/>(Forked from <a href="https://github.com/mkacz91/Triangulations">mkacz91</a>)
     <br/>
   </div>
-  <img id="img4canvas" src="out/iceland2.png" width="300" style="position: absolute; top: 0px; visibility: hidden"></img>
+  <img id="img4canvas" src="out/iceland2.png" width="300" style="position: absolute; top: 0px; visibility: hidden"/>
   <div style="position: absolute; right: 10px; top: 10px; ">
     <h3>Advanced:</h3>
     Initial edge detection sensitivity:<br/>
