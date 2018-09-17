@@ -36,7 +36,11 @@ function* dowork() {
     return pixelData[off + 0] + pixelData[off + 1] + pixelData[off + 2];
   }
 
-  var plane = new THREE.Plane();
+  var sensitivity = Number($('#Sensitivity').val());
+  var TrigSensitivity = Number($('#TrigSensitivity').val());
+  var iterations = Number($('#Iterations').val());
+
+ var plane = new THREE.Plane();
   var va = new THREE.Vector3(), vb = new THREE.Vector3(), vc = new THREE.Vector3();
   var vm = new THREE.Vector3(), vo = new THREE.Vector3();
   var line = new THREE.Line3();
@@ -51,7 +55,7 @@ function* dowork() {
     plane.setFromCoplanarPoints(va, vb, vc);
     line.start.set(xm, ym, 0);
     plane.intersectLine(line, vo);
-    return Math.abs(vo.z - vm.z) > 10;
+    return Math.abs(vo.z - vm.z) > TrigSensitivity;
   }
 
   canvas = $('#canvas');
@@ -81,9 +85,6 @@ function* dowork() {
     sideEdges0[j] = qe.sideEdges[j].slice();
   }
   yield 'slice edges';
-
-  var sensitivity = Number($('#Sensitivity').val());
-  var iterations = Number($('#Iterations').val());
 
   var steinerPts = [];
   for (var y = 0; y < img.height; ++y) {

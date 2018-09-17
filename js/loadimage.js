@@ -14,6 +14,7 @@ $("document").ready(function () {
 
     $(document).on('input', '#Iterations', function (e) { $('#chosenIterations')[0].value = $('#Iterations')[0].value; });
     $(document).on('input', '#Sensitivity', function (e) { $('#chosenSensitivity')[0].value = $('#Sensitivity')[0].value; });
+    $(document).on('input', '#TrigSensitivity', function (e) { $('#chosenTrigSensitivity')[0].value = $('#TrigSensitivity')[0].value; });
 
     $(document).on('input', '#widthImage', function (e) {
         $('#img')[0].width = $('#canvas')[0].width = $('#chosenWidth')[0].value = $('#widthImage')[0].value;
